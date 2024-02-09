@@ -1,0 +1,15 @@
+/*
+ Config.h - Config file for your settings and credentials. 
+ */
+
+#ifndef CONFIG_H
+#define CONFIG_H
+
+// Wifi Credentials
+#define WIFI_SSID "ssid"
+#define WIFI_PSK "password"
+
+//mDNS
+#define MDNS_NAME "jura"
+
+#endif
