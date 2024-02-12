@@ -4,17 +4,17 @@
 #include <ESP8266WebServer.h>
 #include "Config.h"
 
-// PIN Definitions
-#define GPIO_TX 12
-#define GPIO_RX 13
+// Pin Definitions
+#define PIN_TX 12
+#define PIN_RX 13
 
 // Use SoftwareSerial for communication with Jura
-SoftwareSerial softserial(GPIO_RX, GPIO_TX);
+SoftwareSerial juraSerial(PIN_RX, PIN_TX);
 
 // Use the Webserver to expose the API
-ESP8266WebServer web(80);
+ESP8266WebServer server(80);
 
-void setupWifi() {
+void connectToWifi() {
   WiFi.mode(WIFI_STA);
   WiFi.begin(WIFI_SSID, WIFI_PSK);
 
@@ -24,17 +24,15 @@ void setupWifi() {
   }
 
   Serial.println("");
-  Serial.println(String("* Connected to ") + WIFI_SSID + " with: " + WiFi.localIP().toString());
+  Serial.println(String("Connected to ") + WIFI_SSID + " with: " + WiFi.localIP().toString());
 }
 
-void setupWebserver() {
-  web.on("/", []() {
-    web.send(200, "text/plain", "Hello, lover of the golden brown!");
+void setupWebServer() {
+  server.on("/", []() {
+    server.send(200, "text/plain", "Hello, lover of the golden brown!");
   });
 
-  web.begin();
-  Serial.println("* HTTP server started");
-
+  server.begin();
   MDNS.begin(MDNS_NAME);
 }
 
@@ -43,13 +41,13 @@ void setup() {
   digitalWrite(LED_BUILTIN, HIGH);
 
   Serial.begin(9600);
-  softserial.begin(9600);
+  juraSerial.begin(9600);
 
-  setupWifi();
-  setupWebserver();
+  connectToWifi();
+  setupWebServer();
 }
 
 void loop() {
-  web.handleClient();
+  server.handleClient();
   MDNS.update();
 }
